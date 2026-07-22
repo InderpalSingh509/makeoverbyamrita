@@ -1,26 +1,240 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist);
+  --font-heading: var(--font-playfair);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-xl: calc(var(--radius) * 1.4);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --radius: 0.75rem;
+
+  /* Brand tokens */
+  --gold: #d4af37;
+  --gold-light: #f4de88;
+  --gold-dark: #a9832a;
+  --gold-ink: #8a6a1c; /* WCAG AA-safe gold for small text on light backgrounds (4.98:1) */
+  --blush: #e3b0ab;
+  --blush-deep: #c98a83;
+  --blush-ink: #a1554e; /* WCAG AA-safe blush for small text on light backgrounds */
+  --black: #0b0b0b;
+  --charcoal: #171717;
+  --ivory: #fffdfb;
+  --beige: #f5efe6;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+}
+
+/*
+  Design system reference (keep new components aligned to these tiers):
+
+  Border radius
+    rounded-full   → pills, buttons, avatar/icon circles
+    rounded-xl     → form fields
+    rounded-2xl    → compact chrome (floating hero cards, FAQ rows)
+    rounded-3xl    → feature / info cards
+    rounded-[2rem] → large media & surface containers (photos, big glass panels)
+
+  Motion
+    Buttons (pill)        hover scale 1.03 / tap 0.97  (Button.tsx)
+    Floating action (fab) hover scale 1.1  / tap 0.92  (FloatingWhatsApp, ScrollToTop)
+    Hero-scale imagery    hover scale 1.05
+    Gallery/grid tiles    hover scale 1.10
+    Section reveals       FadeIn / StaggerGroup, 0.7-0.9s, ease [0.22,1,0.36,1]
+
+  Shadows
+    hover-lift     → default card hover elevation
+    luxury-shadow  → gold-tinted ambient shadow for hero/about media
+    shadow-xl/2xl  → fixed floating elements (navbar-on-scroll, FABs) only
+*/
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  font-family: var(--font-geist);
+  overflow-x: hidden;
+  background: var(--ivory);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-playfair);
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--gold);
+  color: #fff;
+}
+
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Anchor targets sit under the fixed navbar without being clipped */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+
+  /* Consistent, visible keyboard focus everywhere */
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  .section-padding {
+    padding: 6rem 0;
+  }
+  @media (min-width: 1024px) {
+    .section-padding {
+      padding: 8rem 0;
+    }
+  }
+  .container-width {
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    .container-width {
+      padding-inline: 2rem;
+    }
+  }
+  .glass {
+    backdrop-filter: blur(18px);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .gold-gradient {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  }
+  .gold-text {
+    color: var(--gold);
+  }
+  /* WCAG-AA-safe variants — use these instead of .gold-text when the
+     background is light (ivory/beige/white), since #D4AF37 only hits
+     2.07:1 contrast on white and fails accessibility guidelines. */
+  .gold-text-on-light {
+    color: var(--gold-dark); /* 3.47:1 — fine for large heading text */
+  }
+  .gold-ink {
+    color: var(--gold-ink); /* 4.98:1 — safe for small/body-size text */
+  }
+  .hover-lift {
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+  }
+  .luxury-shadow {
+    box-shadow: 0 15px 45px rgba(212, 175, 55, 0.18);
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 100;
+    background: var(--gold);
+    color: #000;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: top 0.25s ease;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #111;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 999px;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

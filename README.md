@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Makeover by Amrita — Website
+
+A luxury bridal, reception, engagement & party makeup artist website built with Next.js 16 (App Router), TypeScript, Tailwind CSS v4, and Framer Motion.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Before going live — replace placeholders
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project ships with elegant, on-brand **placeholder visuals and contact details** so
+nothing looks broken. Swap these out before launch:
 
-## Learn More
+### 1. Contact details — `lib/site-config.ts`
+Every phone number, WhatsApp link, email address and Instagram handle across the whole site
+is pulled from this one file. Update it once and it updates everywhere (Navbar, Footer,
+Hero, Contact, FloatingWhatsApp).
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Photos
+Replace these files with real photography (keep the same filenames and aspect ratios, or
+update the paths in the matching component):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Section | File(s) | Recommended size |
+|---|---|---|
+| About | `public/images/about/about.jpg` | 700×900 (portrait) |
+| Services | `public/images/services/{bridal,reception,engagement,party}.jpg` | 800×1000 (4:5) |
+| Portfolio | `public/images/portfolio/*.jpg` (8 files) | 800×1000 (4:5) |
+| Hero | `public/images/hero.jpg` | 1536×1024 or similar landscape |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. Testimonials
+`components/sections/Testimonials/Testimonials.tsx` currently shows an honest "reviews
+coming soon" state instead of fabricated quotes. Once you have real client reviews, replace
+the placeholder card with a grid of genuine testimonials (name + occasion + quote).
 
-## Deploy on Vercel
+### 4. Domain & SEO
+Update `siteConfig.url` in `lib/site-config.ts` to your real production domain once deployed
+— this feeds the sitemap, robots.txt and Open Graph tags.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/                  Next.js App Router pages, layout, metadata, sitemap/robots
+components/layout/    Navbar, Footer
+components/sections/  Hero, About, Services, Portfolio, Testimonials, FAQ, Contact
+components/ui/        Reusable primitives (Button, Card, Badge, SectionHeading, FadeIn…)
+lib/site-config.ts    Single source of truth for business/contact info
+public/                Images, logo, generated icons
+```
+
+## Scripts
+
+```bash
+npm run dev     # start dev server
+npm run build   # production build
+npm run start   # run the production build
+npm run lint    # eslint
+```
+
+## Deploying
+
+The easiest way to deploy is [Vercel](https://vercel.com/new), the creators of Next.js.
